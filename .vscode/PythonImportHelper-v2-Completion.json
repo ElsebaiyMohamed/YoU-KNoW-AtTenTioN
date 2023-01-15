@@ -56,7 +56,7 @@
         "kind": 6,
         "importPath": "first_attention",
         "description": "first_attention",
-        "peekOfCode": "class Attention(nn.Module):\n    def __init__(self, taw=0.02, *args, **kwargs):\n        super(Attention, self).__init__()\n        self.taw = taw\n    def forward(self, query, memory, *args, **kwargs):\n        if not pt.is_tensor(query): \n            query = pt.tensor(query)\n        if not pt.is_tensor(memory): \n            memory = pt.tensor(memory)\n        scores = pt.matmul(query, memory.mT)",
+        "peekOfCode": "class Attention(nn.Module):\n    def __init__(self, taw=0.02, *args, **kwargs):\n        super(Attention, self).__init__()\n        self.taw = taw\n    def forward(self, query, memory, *args, **kwargs):\n        '''\n        params:\n                @query: current decoder hidden state\n                @memory: all encoder hidden states\n        return:",
         "detail": "first_attention",
         "documentation": {}
     },

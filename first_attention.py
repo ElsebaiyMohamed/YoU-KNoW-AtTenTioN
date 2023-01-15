@@ -9,22 +9,25 @@ class Attention(nn.Module):
         self.taw = taw
         
     def forward(self, query, memory, *args, **kwargs):
+        '''
+        params:
+                @query: current decoder hidden state
+                @memory: all encoder hidden states
+        return:
+                weighted average above the memory based on current decoder hidden state
+        '''
+        
+        
         if not pt.is_tensor(query): 
             query = pt.tensor(query)
         if not pt.is_tensor(memory): 
             memory = pt.tensor(memory)
             
         scores = pt.matmul(query, memory.mT)
-        # print(scores.detach().numpy())
-        # print('='*50)
-        
+    
         scores = F.softmax(scores/self.taw, -1)
-        # print(scores.detach().numpy())
-        # print('='*50)
         
         scores = pt.matmul(scores, memory)
-        # print(scores.detach().numpy())
-        # print('='*50)
         
         return scores
         
@@ -34,13 +37,7 @@ if __name__ == '__main__':
     np.random.seed(1)
     q      = np.random.randint(1, 5, (3, 1, 6)).astype(np.float32)
     memory = np.random.randint(1, 5, (3, 3, 6)).astype(np.float32)
-    # print(q)
-    # print('='*50)
-    # print(memory)
-    # print('='*50)
-    # print('='*50)
-    # print('='*50)
-        
+
     cal = Attention()
     
     cal(q, memory)
