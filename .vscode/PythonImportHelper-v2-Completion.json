@@ -1,99 +1,11 @@
 [
     {
-        "label": "numpy",
+        "label": "tensorflow",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "numpy",
-        "description": "numpy",
-        "detail": "numpy",
-        "documentation": {}
-    },
-    {
-        "label": "torch",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "torch",
-        "description": "torch",
-        "detail": "torch",
-        "documentation": {}
-    },
-    {
-        "label": "nn",
-        "importPath": "torch",
-        "description": "torch",
-        "isExtraImport": true,
-        "detail": "torch",
-        "documentation": {}
-    },
-    {
-        "label": "nn",
-        "importPath": "torch",
-        "description": "torch",
-        "isExtraImport": true,
-        "detail": "torch",
-        "documentation": {}
-    },
-    {
-        "label": "torch.nn",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "torch.nn",
-        "description": "torch.nn",
-        "detail": "torch.nn",
-        "documentation": {}
-    },
-    {
-        "label": "torch.nn.functional",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "torch.nn.functional",
-        "description": "torch.nn.functional",
-        "detail": "torch.nn.functional",
-        "documentation": {}
-    },
-    {
-        "label": "Attention",
-        "kind": 6,
-        "importPath": "first_attention",
-        "description": "first_attention",
-        "peekOfCode": "class Attention(nn.Module):\n    def __init__(self, taw=0.02, *args, **kwargs):\n        super(Attention, self).__init__()\n        self.taw = taw\n    def forward(self, query, memory, *args, **kwargs):\n        '''\n        params:\n                @query: current decoder hidden state\n                @memory: all encoder hidden states\n        return:",
-        "detail": "first_attention",
-        "documentation": {}
-    },
-    {
-        "label": "FeedForward",
-        "kind": 6,
-        "importPath": "full_self_attention",
-        "description": "full_self_attention",
-        "peekOfCode": "class FeedForward(nn.Module):\n    def __init(self, input_dim, first_dim, out_dim, *args, **kwargs):\n        super(FeedForward, self).__init__()\n        self.layer1 = nn.Linear(input_dim, first_dim)\n        self.layer1 = nn.Linear(first_dim, out_dim)\n    def forward(self, x):\n        _, l, d = x.size()\n        z = F.leaky_relu(self.layer1(x), negative_slope=0.6)\n        z =  F.leaky_relu(self.layer2(x), negative_slope=0.6)\n        return F.layer_norm(x + z, [l, d])",
-        "detail": "full_self_attention",
-        "documentation": {}
-    },
-    {
-        "label": "SelfAttention",
-        "kind": 6,
-        "importPath": "full_self_attention",
-        "description": "full_self_attention",
-        "peekOfCode": "class SelfAttention(nn.module):\n    def __init__(self, *args, **kwargs):\n        super(SelfAttention, self).__init__()\n        self.mha = nn.MultiheadAttention(**kwargs) #embed_dim, num_heads, batch_first\n        self.ffn = FeedForward(*args)              #input_dim, first_dim, out_dim,\n    def forward(self, x, **kwargs):\n        _, l, d = x.size()\n        attention_out = self.mha(x, **kwargs)\n        x = F.layer_norm(x+attention_out, [l, d])\n        x = F.layer_norm(x + self.ffn(x), [l, d])",
-        "detail": "full_self_attention",
-        "documentation": {}
-    },
-    {
-        "label": "SimpleSelfAttention",
-        "kind": 6,
-        "importPath": "simple_self_attention",
-        "description": "simple_self_attention",
-        "peekOfCode": "class SimpleSelfAttention(nn.Module):\n    def __init__(self):\n        super(SimpleSelfAttention, self).__init__()\n    def forward(self, x):\n        w = F.softmax(pt.matmul(x, x.mT), 2)\n        y = pt.matmul(w, x)\n        return y\nclass PosEmpedding(nn.Module):\n    def __init__(self, *args, **kwargs):\n        super(PosEmpedding, self).__init__()",
-        "detail": "simple_self_attention",
-        "documentation": {}
-    },
-    {
-        "label": "PosEmpedding",
-        "kind": 6,
-        "importPath": "simple_self_attention",
-        "description": "simple_self_attention",
-        "peekOfCode": "class PosEmpedding(nn.Module):\n    def __init__(self, *args, **kwargs):\n        super(PosEmpedding, self).__init__()\n        self.emppedding = nn.Embedding(*args, **kwargs)\n        self.position   = nn.Embedding(*args, **kwargs)\n    def forward(self, x):\n        _, l, d = x.size()\n        return F.layer_norm(self.emppedding(x) + self.position(x), [l, d])\nif __name__ == '__main__':\n    d = pt.randint(-10, 10, (1, 10, 3), dtype=pt.float)",
-        "detail": "simple_self_attention",
+        "importPath": "tensorflow",
+        "description": "tensorflow",
+        "detail": "tensorflow",
         "documentation": {}
     }
 ]
