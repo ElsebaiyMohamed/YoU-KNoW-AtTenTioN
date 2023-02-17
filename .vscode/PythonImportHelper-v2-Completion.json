@@ -7,5 +7,32 @@
         "description": "tensorflow",
         "detail": "tensorflow",
         "documentation": {}
+    },
+    {
+        "label": "Linear",
+        "kind": 6,
+        "importPath": "relative_multihead_attention",
+        "description": "relative_multihead_attention",
+        "peekOfCode": "class Linear(tf.keras.layers.Layer):\n    def __init__(self, in_feature, out_feature, name=None):\n        super().__init__()\n        self.in_feature = in_feature\n        self.out_feature = out_feature\n        self.name = name if name is not None else 'untitled'\n        w_init = tf.random_normal_initializer()\n        self.w = tf.Variable(initial_value=w_init(shape=(self.in_feature, self.out_feature),\n                                                  dtype='float32'), trainable=True)\n    def call(self, x):",
+        "detail": "relative_multihead_attention",
+        "documentation": {}
+    },
+    {
+        "label": "RelativeMultiHeadAttenion",
+        "kind": 6,
+        "importPath": "relative_multihead_attention",
+        "description": "relative_multihead_attention",
+        "peekOfCode": "class RelativeMultiHeadAttenion(tf.keras.layers.Layer):\n    def __init__(self, heads, d_model, k=2, **kwargs):\n        super().__init__(**kwargs)\n        assert d_model % heads ==0, \"Model dim should be divisable by num of heads\"\n        self.heads   = heads\n        self.d_model = d_model\n        self.d     = self.d_model // self.heads\n        self.WQ = Linear(self.d_model, self.d_model)\n        self.WK = Linear(self.d_model, self.d_model)\n        self.WV = Linear(self.d_model, self.d_model)",
+        "detail": "relative_multihead_attention",
+        "documentation": {}
+    },
+    {
+        "label": "create_mask",
+        "kind": 2,
+        "importPath": "relative_multihead_attention",
+        "description": "relative_multihead_attention",
+        "peekOfCode": "def create_mask(self, x):\n    tf.linalg.band_part(x, -1, 0)",
+        "detail": "relative_multihead_attention",
+        "documentation": {}
     }
 ]
