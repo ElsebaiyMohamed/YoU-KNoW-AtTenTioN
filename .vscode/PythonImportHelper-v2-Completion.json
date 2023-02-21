@@ -9,11 +9,20 @@
         "documentation": {}
     },
     {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
         "label": "Linear",
         "kind": 6,
         "importPath": "relative_multihead_attention",
         "description": "relative_multihead_attention",
-        "peekOfCode": "class Linear(tf.keras.layers.Layer):\n    def __init__(self, in_feature, out_feature, name=None):\n        super().__init__()\n        self.in_feature = in_feature\n        self.out_feature = out_feature\n        self.name = name if name is not None else 'untitled'\n        w_init = tf.random_normal_initializer()\n        self.w = tf.Variable(initial_value=w_init(shape=(self.in_feature, self.out_feature),\n                                                  dtype='float32'), trainable=True)\n    def call(self, x):",
+        "peekOfCode": "class Linear(tf.keras.layers.Layer):\n    def __init__(self, in_feature, out_feature, name=None):\n        super().__init__()\n        self.in_feature = in_feature\n        self.out_feature = out_feature\n        self.nameL = name if name is not None else self.__class__.__name__\n        w_init = tf.random_normal_initializer()\n        self.w = tf.Variable(initial_value=w_init(shape=(self.in_feature, self.out_feature),\n                                                  dtype='float32'), trainable=True)\n    def call(self, x):",
         "detail": "relative_multihead_attention",
         "documentation": {}
     },
@@ -24,6 +33,78 @@
         "description": "relative_multihead_attention",
         "peekOfCode": "class RelativeMultiHeadAttenion(tf.keras.layers.Layer):\n    def __init__(self, heads, d_model, max_len=500, **kwargs):\n        super().__init__(**kwargs)\n        assert d_model % heads ==0, \"Model dim should be divisable by num of heads\"\n        self.max_len = max_len\n        self.heads   = heads\n        self.d_model = d_model\n        self.d     = self.d_model // self.heads\n        self.WQ = Linear(self.d_model, self.d_model)\n        self.WK = Linear(self.d_model, self.d_model)",
         "detail": "relative_multihead_attention",
+        "documentation": {}
+    },
+    {
+        "label": "left_shift",
+        "kind": 2,
+        "importPath": "test",
+        "description": "test",
+        "peekOfCode": "def left_shift(x):\n    dims = x.shape\n    # print(dims)\n    x = np.pad(x, [(0,0), (0,0), (0,0), (1,0)])\n    x = x.reshape(dims[0], dims[1], dims[3]+1, dims[2])\n    x = x[:, :, 1:, :]\n    # print(x.shape)\n    x = x.reshape(*dims)\n    return x\ndef right_shift(x):",
+        "detail": "test",
+        "documentation": {}
+    },
+    {
+        "label": "right_shift",
+        "kind": 2,
+        "importPath": "test",
+        "description": "test",
+        "peekOfCode": "def right_shift(x):\n    dims = x.shape\n    x = np.pad(x, [(0,0), (0,0), (0,0), (0,1)])\n    x = x.reshape(dims[0], dims[1], dims[3]+1, dims[2])\n    x = x[:, :, :-1, :]\n    x = x.reshape(*dims)\n    return x\ndef generate_samples(qlen, klen, d_model):\n    batch = 5\n    head = 8",
+        "detail": "test",
+        "documentation": {}
+    },
+    {
+        "label": "generate_samples",
+        "kind": 2,
+        "importPath": "test",
+        "description": "test",
+        "peekOfCode": "def generate_samples(qlen, klen, d_model):\n    batch = 5\n    head = 8\n    q = np.random.randn(batch, head, qlen, d_model)\n    U = np.random.randn(batch, head, klen, d_model)\n    # U = np.transpose(U, (0, 1, 3, 2))\n    offset = klen-qlen # if klen>qlen, start qlen at offset position\n    M = np.zeros((batch, head, qlen, klen))\n    for b in range(batch):\n        for h in range(head):",
+        "detail": "test",
+        "documentation": {}
+    },
+    {
+        "label": "rel_position",
+        "kind": 2,
+        "importPath": "test",
+        "description": "test",
+        "peekOfCode": "def rel_position(q, U):\n        m, n = q.shape[2], U.shape[2]        \n        lower_mask, upper_mask = np.tril(np.ones((5, 8, n,n)))[:,:, n-m:], np.triu(np.ones((5, 8, n,n)), k=1)[:, :, n-m:]\n        # print(q.shape)\n        # print(np.transpose(np.flipud(U), (0, 1, 3, 2)).shape)\n        lower_diag = left_shift(q@np.transpose(np.flipud(U), (0, 1, 3, 2)))\n        if m < n:\n            upper_diag = right_shift(q@np.transpose(U[:, :, :m-n], (0, 1, 3, 2)))\n            upper_diag = np.pad(upper_diag, [(0,0), (0,0), (0,0), (n-m,0)])\n        else:",
+        "detail": "test",
+        "documentation": {}
+    },
+    {
+        "label": "qlen",
+        "kind": 5,
+        "importPath": "test",
+        "description": "test",
+        "peekOfCode": "qlen = 3\nklen = 5\nd_model = 12\nM, q, U = generate_samples(qlen, klen, d_model)\npred = rel_position(q, U)\nprint(\"Correct answer:\\n\", np.round(M, 2))\nprint(\"Shifted algorithm:\\n\", np.round(pred, 2))\nprint(\"Match?\", np.allclose(M, pred))",
+        "detail": "test",
+        "documentation": {}
+    },
+    {
+        "label": "klen",
+        "kind": 5,
+        "importPath": "test",
+        "description": "test",
+        "peekOfCode": "klen = 5\nd_model = 12\nM, q, U = generate_samples(qlen, klen, d_model)\npred = rel_position(q, U)\nprint(\"Correct answer:\\n\", np.round(M, 2))\nprint(\"Shifted algorithm:\\n\", np.round(pred, 2))\nprint(\"Match?\", np.allclose(M, pred))",
+        "detail": "test",
+        "documentation": {}
+    },
+    {
+        "label": "d_model",
+        "kind": 5,
+        "importPath": "test",
+        "description": "test",
+        "peekOfCode": "d_model = 12\nM, q, U = generate_samples(qlen, klen, d_model)\npred = rel_position(q, U)\nprint(\"Correct answer:\\n\", np.round(M, 2))\nprint(\"Shifted algorithm:\\n\", np.round(pred, 2))\nprint(\"Match?\", np.allclose(M, pred))",
+        "detail": "test",
+        "documentation": {}
+    },
+    {
+        "label": "pred",
+        "kind": 5,
+        "importPath": "test",
+        "description": "test",
+        "peekOfCode": "pred = rel_position(q, U)\nprint(\"Correct answer:\\n\", np.round(M, 2))\nprint(\"Shifted algorithm:\\n\", np.round(pred, 2))\nprint(\"Match?\", np.allclose(M, pred))",
+        "detail": "test",
         "documentation": {}
     }
 ]
